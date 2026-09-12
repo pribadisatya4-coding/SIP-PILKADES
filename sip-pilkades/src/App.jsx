@@ -38,7 +38,7 @@ export default function App() {
         setTpsList(data);
       }
     } catch (err) {
-      console.log('Menggunakan mode lokal / Supabase belum dikonfigurasi:', err);
+      console.log('Menggunakan mode lokal:', err);
     } finally {
       setIsLoading(false);
     }
