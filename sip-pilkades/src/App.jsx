@@ -120,6 +120,7 @@ export default function App() {
       if (!error) {
         fetchTpsData();
       } else {
+        // Fallback jika database memiliki kebijakan RLS atau offline
         setTpsList(tpsList.filter(t => t.id !== id));
       }
     }
