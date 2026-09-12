@@ -156,7 +156,7 @@ export default function App() {
         <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-white/20">
           <div className="bg-gradient-to-r from-emerald-700 to-teal-800 p-6 text-white text-center relative">
             <div className="mx-auto bg-white/15 w-20 h-20 rounded-full flex items-center justify-center mb-3 shadow-inner border border-white/30 overflow-hidden">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain p-2" onError={(e)=>{e.target.onerror=null; e.target.src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=100&auto=format&fit=crop"}} />
+              <img src="/logo.png.png" alt="Logo" className="w-full h-full object-contain p-2" onError={(e)=>{e.target.onerror=null; e.target.src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=100&auto=format&fit=crop"}} />
             </div>
             <h1 className="text-2xl font-bold tracking-wide">PILKADES DESA</h1>
             <p className="text-emerald-200 text-sm mt-1">Kalkulator & Tabulasi Suara Timses</p>
