@@ -159,7 +159,7 @@ export default function App() {
             <div className="mx-auto bg-white/15 w-28 h-28 rounded-full flex items-center justify-center mb-3 shadow-inner border border-amber-400/40 overflow-hidden p-0">
               <img src={logoImage} alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <h1 className="text-2xl font-black tracking-wide text-amber-300">PILKADES DESA</h1>
+            <h1 className="text-2xl font-black tracking-wide text-amber-300">PILKADES DESA MUNGGU</h1>
             <p className="text-red-100 text-sm mt-1 font-medium">Kalkulator & Tabulasi Suara Timses</p>
             <div className="mt-3 inline-block bg-black/40 text-xs px-3 py-1 rounded-full border border-amber-400/40 text-amber-300 font-bold">
               Kandidat No. 1: <strong className="text-white">I Kadek Indra Putra</strong>
