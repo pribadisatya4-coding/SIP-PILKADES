@@ -156,7 +156,7 @@ export default function App() {
       <div className="min-h-screen bg-gradient-to-br from-red-950 via-red-900 to-black flex items-center justify-center p-4">
         <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-red-500/20">
           <div className="bg-gradient-to-r from-red-700 via-red-800 to-rose-900 p-6 text-white text-center relative border-b-4 border-amber-400">
-            <div className="mx-auto bg-white/15 w-28 h-28 rounded-full flex items-center justify-center mb-3 shadow-inner border border-amber-400/40 overflow-hidden p-2">
+            <div className="mx-auto bg-white/15 w-28 h-28 rounded-full flex items-center justify-center mb-3 shadow-inner border border-amber-400/40 overflow-hidden p-0">
               <img src={logoImage} alt="Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-2xl font-black tracking-wide text-amber-300">PILKADES DESA</h1>
