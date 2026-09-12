@@ -54,7 +54,7 @@ export default function App() {
         setCurrentUser({ username: 'admin', role: 'admin', name: 'Administrator Utama' });
         setActiveTab('dashboard');
       } else {
-        setLoginError('Username atau password Admin salah! (Gunakan admin / pilihdésa2026)');
+        setLoginError('Username atau password Admin salah!');
       }
     } else {
       const foundTps = tpsList.find(t => t.username === loginUsername && t.password === loginPassword);
@@ -223,23 +223,9 @@ export default function App() {
                 </div>
               </div>
 
-              {loginRole === 'admin' && (
-                <div className="text-xs text-red-800 bg-red-50 p-2.5 rounded-lg border border-red-200">
-                  <span className="font-bold text-red-900">Info Login Admin:</span><br/>
-                  Username: <code className="text-red-700 font-bold">admin</code> | Password: <code className="text-red-700 font-bold">pilihdésa2026</code>
-                </div>
-              )}
-
-              {loginRole === 'tps' && (
-                <div className="text-xs text-red-800 bg-red-50 p-2.5 rounded-lg border border-red-200">
-                  <span className="font-bold text-red-900">Info Akun TPS:</span><br/>
-                  Gunakan username <code className="text-red-700 font-bold">tps1</code> s/d <code className="text-red-700 font-bold">tps4</code> dengan password <code className="text-red-700 font-bold">123</code>.
-                </div>
-              )}
-
               <button 
                 type="submit"
-                className="w-full mt-2 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-red-700/30 transition-all text-sm flex items-center justify-center space-x-2 border-b-2 border-amber-400"
+                className="w-full mt-4 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-red-700/30 transition-all text-sm flex items-center justify-center space-x-2 border-b-2 border-amber-400"
               >
                 <span>Masuk ke Sistem</span>
               </button>
