@@ -51,6 +51,7 @@ export default function App() {
     if (loginRole === 'admin') {
       if (loginUsername === 'admin' && loginPassword === 'pilihdésa2026') {
         setCurrentUser({ username: 'admin', role: 'admin', name: 'Administrator Utama' });
+        setActiveTab('dashboard');
       } else {
         setLoginError('Username atau password Admin salah! (Gunakan admin / pilihdésa2026)');
       }
@@ -58,6 +59,7 @@ export default function App() {
       const foundTps = tpsList.find(t => t.username === loginUsername && t.password === loginPassword);
       if (foundTps) {
         setCurrentUser({ username: foundTps.username, role: 'tps', tpsId: foundTps.id, name: `Petugas ${foundTps.name}` });
+        setActiveTab('laporan'); // Petugas TPS langsung diarahkan ke tab laporan
       } else {
         setLoginError('Username atau password TPS tidak ditemukan!');
       }
@@ -120,7 +122,6 @@ export default function App() {
       if (!error) {
         fetchTpsData();
       } else {
-        // Fallback jika database memiliki kebijakan RLS atau offline
         setTpsList(tpsList.filter(t => t.id !== id));
       }
     }
@@ -290,58 +291,77 @@ export default function App() {
           </div>
         </div>
 
+        {/* Navigation Tabs - Hanya Tampilkan Tab Sesuai Role */}
         <div className="bg-emerald-900/60 border-t border-emerald-700/50">
           <div className="max-w-7xl mx-auto px-4 flex space-x-2 overflow-x-auto py-1">
-            <button 
-              onClick={() => setActiveTab('dashboard')}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center space-x-2 transition-all whitespace-nowrap ${activeTab === 'dashboard' ? 'bg-white text-emerald-900 shadow' : 'text-emerald-100 hover:bg-emerald-800'}`}
-            >
-              <BarChart2 className="w-4 h-4" />
-              <span>Dashboard Real-Count</span>
-            </button>
+            {currentUser.role === 'admin' && (
+              <>
+                <button 
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center space-x-2 transition-all whitespace-nowrap ${activeTab === 'dashboard' ? 'bg-white text-emerald-900 shadow' : 'text-emerald-100 hover:bg-emerald-800'}`}
+                >
+                  <BarChart2 className="w-4 h-4" />
+                  <span>Dashboard Real-Count</span>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('tps')}
+                  className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center space-x-2 transition-all whitespace-nowrap ${activeTab === 'tps' ? 'bg-white text-emerald-900 shadow' : 'text-emerald-100 hover:bg-emerald-800'}`}
+                >
+                  <Building className="w-4 h-4" />
+                  <span>Manajemen & Pendaftaran TPS</span>
+                </button>
+              </>
+            )}
 
-            <button 
-              onClick={() => setActiveTab('tps')}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center space-x-2 transition-all whitespace-nowrap ${activeTab === 'tps' ? 'bg-white text-emerald-900 shadow' : 'text-emerald-100 hover:bg-emerald-800'}`}
-            >
-              <Building className="w-4 h-4" />
-              <span>{currentUser.role === 'admin' ? 'Manajemen & Pendaftaran TPS' : 'Laporan Suara TPS Saya'}</span>
-            </button>
+            {currentUser.role === 'tps' && (
+              <button 
+                onClick={() => setActiveTab('laporan')}
+                className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center space-x-2 transition-all whitespace-nowrap ${activeTab === 'laporan' ? 'bg-white text-emerald-900 shadow' : 'text-emerald-100 hover:bg-emerald-800'}`}
+              >
+                <Building className="w-4 h-4" />
+                <span>Form Laporan Suara TPS Saya</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
-        <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
-          
-          <div className="space-y-2 text-center md:text-left">
-            <span className="bg-emerald-600/80 text-emerald-100 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-400/30">
-              Kandidat Unggulan • No. Urut 1
-            </span>
-            <h2 className="text-3xl font-extrabold tracking-tight">I Kadek Indra Putra</h2>
-            <p className="text-emerald-100 text-sm max-w-xl">
-              Tabulasi pemenangan berbasis laporan tim sukses internal TPS. Pantau perolehan suara secara real-time.
-            </p>
-          </div>
+        
+        {/* Banner Hanya Ditampilkan untuk Admin */}
+        {currentUser.role === 'admin' && (
+          <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div className="space-y-2 text-center md:text-left">
+              <span className="bg-emerald-600/80 text-emerald-100 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-400/30">
+                Kandidat Unggulan • No. Urut 1
+              </span>
+              <h2 className="text-3xl font-extrabold tracking-tight">I Kadek Indra Putra</h2>
+              <p className="text-emerald-100 text-sm max-w-xl">
+                Tabulasi pemenangan berbasis laporan tim sukses internal TPS. Pantau perolehan suara secara real-time.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full md:w-auto">
-            <div className="bg-black/25 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-center">
-              <div className="text-xs text-emerald-200 uppercase font-semibold">Suara Masuk</div>
-              <div className="text-xl font-bold mt-0.5">{totalSuaraKandidat} <span className="text-xs font-normal">suara</span></div>
-            </div>
-            <div className="bg-black/25 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-center">
-              <div className="text-xs text-emerald-200 uppercase font-semibold">Persentase</div>
-              <div className="text-xl font-bold mt-0.5 text-emerald-300">{persentaseKemenangan}%</div>
-            </div>
-            <div className="bg-black/25 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-center col-span-2 sm:col-span-1">
-              <div className="text-xs text-emerald-200 uppercase font-semibold">Progres TPS</div>
-              <div className="text-xl font-bold mt-0.5">{tpsSelesaiCount} / {tpsList.length} <span className="text-xs font-normal">({persentaseProgres}%)</span></div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full md:w-auto">
+              <div className="bg-black/25 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-center">
+                <div className="text-xs text-emerald-200 uppercase font-semibold">Suara Masuk</div>
+                <div className="text-xl font-bold mt-0.5">{totalSuaraKandidat} <span className="text-xs font-normal">suara</span></div>
+              </div>
+              <div className="bg-black/25 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-center">
+                <div className="text-xs text-emerald-200 uppercase font-semibold">Persentase</div>
+                <div className="text-xl font-bold mt-0.5 text-emerald-300">{persentaseKemenangan}%</div>
+              </div>
+              <div className="bg-black/25 backdrop-blur-sm p-3.5 rounded-xl border border-white/10 text-center col-span-2 sm:col-span-1">
+                <div className="text-xs text-emerald-200 uppercase font-semibold">Progres TPS</div>
+                <div className="text-xl font-bold mt-0.5">{tpsSelesaiCount} / {tpsList.length} <span className="text-xs font-normal">({persentaseProgres}%)</span></div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {activeTab === 'dashboard' && (
+        {/* TAB 1: DASHBOARD (ADMIN ONLY) */}
+        {currentUser.role === 'admin' && activeTab === 'dashboard' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
@@ -452,138 +472,138 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'tps' && (
+        {/* TAB 2: MANAJEMEN TPS (ADMIN ONLY) */}
+        {currentUser.role === 'admin' && activeTab === 'tps' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
               <div>
-                <h3 className="font-bold text-slate-800 text-base">
-                  {currentUser.role === 'admin' ? 'Manajemen TPS & Pendaftaran Akun Timses' : 'Form Laporan Suara TPS Anda'}
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  {currentUser.role === 'admin' 
-                    ? 'Tambah TPS baru, atur target suara, dan tentukan username serta password untuk koordinator TPS.' 
-                    : `Anda masuk sebagai petugas untuk ${tpsList.find(t => t.id === currentUser.tpsId)?.name || 'TPS'}. Masukkan data rekapitulasi C1.`}
-                </p>
+                <h3 className="font-bold text-slate-800 text-base">Manajemen TPS & Pendaftaran Akun Timses</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Tambah TPS baru, atur target suara, dan tentukan username serta password untuk koordinator TPS.</p>
               </div>
 
-              {currentUser.role === 'admin' && (
-                <button 
-                  onClick={() => {
-                    setEditingTps(null);
-                    setTpsForm({ name: '', dpt: '', target_suara: '', koordinator: '', username: '', password: '' });
-                    setShowTpsModal(true);
-                  }}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl shadow transition-all text-xs flex items-center space-x-2 whitespace-nowrap"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Tambah TPS Baru</span>
-                </button>
-              )}
+              <button 
+                onClick={() => {
+                  setEditingTps(null);
+                  setTpsForm({ name: '', dpt: '', target_suara: '', koordinator: '', username: '', password: '' });
+                  setShowTpsModal(true);
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl shadow transition-all text-xs flex items-center space-x-2 whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Tambah TPS Baru</span>
+              </button>
             </div>
 
-            {currentUser.role === 'admin' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {tpsList.map((tps) => (
-                  <div key={tps.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4 hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
-                          ID TPS: {tps.id}
-                        </span>
-                        <h4 className="font-bold text-slate-900 text-base mt-1">{tps.name}</h4>
-                        <p className="text-xs text-slate-500">Koordinator: <strong className="text-slate-700">{tps.koordinator}</strong></p>
-                      </div>
-                      <div className="flex space-x-1">
-                        <button 
-                          onClick={() => {
-                            setEditingTps(tps);
-                            setTpsForm({ name: tps.name, dpt: tps.dpt, target_suara: tps.target_suara, koordinator: tps.koordinator, username: tps.username, password: tps.password });
-                            setShowTpsModal(true);
-                          }}
-                          className="p-1.5 text-slate-500 hover:text-emerald-700 bg-slate-50 hover:bg-emerald-50 rounded-lg transition-colors"
-                          title="Edit TPS"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteTps(tps.id)}
-                          className="p-1.5 text-slate-500 hover:text-red-600 bg-slate-50 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Hapus TPS"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200 text-center text-xs">
-                      <div>
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">DPT</span>
-                        <strong className="text-slate-800">{tps.dpt}</strong>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Target Paslon 1</span>
-                        <strong className="text-emerald-700">{tps.target_suara}</strong>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Perolehan Masuk</span>
-                        <strong className="text-teal-700">{tps.suara_kandidat}</strong>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-100">
-                      <div>
-                        Login Petugas: <code className="bg-slate-100 px-1.5 py-0.5 rounded text-emerald-700 font-bold">{tps.username}</code> / <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">{tps.password}</code>
-                      </div>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${tps.status === 'Masuk' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                        {tps.status}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {tpsList.map((tps) => (
+                <div key={tps.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                        ID TPS: {tps.id}
                       </span>
+                      <h4 className="font-bold text-slate-900 text-base mt-1">{tps.name}</h4>
+                      <p className="text-xs text-slate-500">Koordinator: <strong className="text-slate-700">{tps.koordinator}</strong></p>
+                    </div>
+                    <div className="flex space-x-1">
+                      <button 
+                        onClick={() => {
+                          setEditingTps(tps);
+                          setTpsForm({ name: tps.name, dpt: tps.dpt, target_suara: tps.target_suara, koordinator: tps.koordinator, username: tps.username, password: tps.password });
+                          setShowTpsModal(true);
+                        }}
+                        className="p-1.5 text-slate-500 hover:text-emerald-700 bg-slate-50 hover:bg-emerald-50 rounded-lg transition-colors"
+                        title="Edit TPS"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteTps(tps.id)}
+                        className="p-1.5 text-slate-500 hover:text-red-600 bg-slate-50 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Hapus TPS"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
 
-            {currentUser.role === 'tps' && (() => {
+                  <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200 text-center text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">DPT</span>
+                      <strong className="text-slate-800">{tps.dpt}</strong>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">Target Paslon 1</span>
+                      <strong className="text-emerald-700">{tps.target_suara}</strong>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">Perolehan Masuk</span>
+                      <strong className="text-teal-700">{tps.suara_kandidat}</strong>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-100">
+                    <div>
+                      Login Petugas: <code className="bg-slate-100 px-1.5 py-0.5 rounded text-emerald-700 font-bold">{tps.username}</code> / <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">{tps.password}</code>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${tps.status === 'Masuk' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                      {tps.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: FORM LAPORAN (TPS USER ONLY - TAMPILAN BERSIH KHUSUS PETUGAS) */}
+        {currentUser.role === 'tps' && (
+          <div className="space-y-6">
+            {(() => {
               const myTps = tpsList.find(t => t.id === currentUser.tpsId);
               if (!myTps) return <div className="p-6 bg-white rounded-xl shadow-sm text-center text-slate-500">Data TPS tidak ditemukan.</div>;
 
               return (
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-2xl mx-auto">
-                  <div className="border-b border-slate-200 pb-4 mb-6">
-                    <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded">Formulir Laporan TPS Anda</span>
-                    <h3 className="text-xl font-bold text-slate-900 mt-2">{myTps.name}</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">Koordinator: <strong className="text-slate-700">{myTps.koordinator}</strong> | DPT: {myTps.dpt} | Target: {myTps.target_suara} suara</p>
+                <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 max-w-2xl mx-auto space-y-6">
+                  <div className="bg-gradient-to-r from-emerald-700 to-teal-800 text-white p-6 rounded-xl shadow-md space-y-2">
+                    <span className="bg-emerald-600 text-emerald-100 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-400/30">
+                      Area Petugas / Saksi TPS
+                    </span>
+                    <h3 className="text-2xl font-extrabold">{myTps.name}</h3>
+                    <p className="text-xs text-emerald-200">
+                      Koordinator: <strong className="text-white">{myTps.koordinator}</strong> | DPT: {myTps.dpt} | Target Suara Paslon 1: {myTps.target_suara}
+                    </p>
                   </div>
 
                   <form onSubmit={(e) => handleReportSubmit(e, myTps.id)} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Total Pemilih Hadir (Suara Masuk)</label>
-                        <input type="number" name="suara_masuk" defaultValue={myTps.suara_masuk} required min="0" className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm" />
+                        <input type="number" name="suara_masuk" defaultValue={myTps.suara_masuk} required min="0" className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm" />
                       </div>
 
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Total Suara Sah</label>
-                        <input type="number" name="suara_sah" defaultValue={myTps.suara_sah} required min="0" className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm" />
+                        <input type="number" name="suara_sah" defaultValue={myTps.suara_sah} required min="0" className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm" />
                       </div>
 
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Total Suara Tidak Sah</label>
-                        <input type="number" name="suara_tidak_sah" defaultValue={myTps.suara_tidak_sah} required min="0" className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm" />
+                        <input type="number" name="suara_tidak_sah" defaultValue={myTps.suara_tidak_sah} required min="0" className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm" />
                       </div>
 
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">Perolehan Suara No. 1 (I Kadek Indra Putra)</label>
-                        <input type="number" name="suara_kandidat" defaultValue={myTps.suara_kandidat} required min="0" className="w-full px-3 py-2 bg-emerald-50 border border-emerald-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-emerald-900 font-bold text-sm" />
+                        <input type="number" name="suara_kandidat" defaultValue={myTps.suara_kandidat} required min="0" className="w-full px-3.5 py-2.5 bg-emerald-50 border border-emerald-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-emerald-900 font-bold text-sm" />
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Catatan / Keterangan Saksi / Kendala</label>
-                      <textarea name="catatan" defaultValue={myTps.catatan} rows="3" className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm"></textarea>
+                      <textarea name="catatan" defaultValue={myTps.catatan} rows="3" className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-800 text-sm" placeholder="Tuliskan catatan kondisi di TPS..."></textarea>
                     </div>
 
-                    <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition-all text-sm flex items-center justify-center space-x-2">
+                    <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-emerald-600/30 transition-all text-sm flex items-center justify-center space-x-2">
                       <Send className="w-4 h-4" />
                       <span>Kirim Laporan Rekapitulasi Suara</span>
                     </button>
@@ -595,12 +615,13 @@ export default function App() {
         )}
       </main>
 
+      {/* Modal Add / Edit TPS (Admin Only) */}
       {showTpsModal && currentUser.role === 'admin' && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
             <div className="bg-emerald-800 text-white px-6 py-4 flex justify-between items-center">
               <h3 className="font-bold text-base">{editingTps ? 'Edit TPS & Akun Timses' : 'Tambah TPS Baru'}</h3>
-              <button onClick={() => setShowTpsModal(false)} className="text-emerald-200 hover:text-white">&times;</button>
+              <button onClick={() => setShowTpsModal(false)} className="text-emerald-200 hover:text-white text-lg">&times;</button>
             </div>
 
             <form onSubmit={handleSaveTps} className="p-6 space-y-4 text-xs">
