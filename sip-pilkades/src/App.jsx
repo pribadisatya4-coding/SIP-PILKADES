@@ -5,7 +5,7 @@ import {
   RefreshCw, Send
 } from 'lucide-react';
 import { supabase } from './supabaseClient';
-import logoImage from './logo.png';
+import logoImage from './logo.jpg';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
