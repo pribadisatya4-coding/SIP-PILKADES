@@ -50,7 +50,7 @@ export default function App() {
     setLoginError('');
 
     if (loginRole === 'admin') {
-      if (loginUsername === 'admin' && loginPassword === 'pilihdésa2026') {
+      if (loginUsername === 'admin' && loginPassword === 'sipmenang2026') {
         setCurrentUser({ username: 'admin', role: 'admin', name: 'Administrator Utama' });
         setActiveTab('dashboard');
       } else {
