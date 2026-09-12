@@ -157,7 +157,7 @@ export default function App() {
         <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-white/20">
           <div className="bg-gradient-to-r from-emerald-700 to-teal-800 p-6 text-white text-center relative">
             <div className="mx-auto bg-white/15 w-28 h-28 rounded-full flex items-center justify-center mb-3 shadow-inner border border-white/30 overflow-hidden">
-              <img src={logoImage} alt="Logo" className="w-full h-full object-contain p-1.5" />
+              <img src={logoImage} alt="Logo" className="w-full h-full object-contain p-2" />
             </div>
             <h1 className="text-2xl font-bold tracking-wide">PILKADES DESA</h1>
             <p className="text-emerald-200 text-sm mt-1">Kalkulator & Tabulasi Suara Timses</p>
