@@ -59,7 +59,7 @@ export default function App() {
       const foundTps = tpsList.find(t => t.username === loginUsername && t.password === loginPassword);
       if (foundTps) {
         setCurrentUser({ username: foundTps.username, role: 'tps', tpsId: foundTps.id, name: `Petugas ${foundTps.name}` });
-        setActiveTab('laporan'); // Petugas TPS langsung diarahkan ke tab laporan
+        setActiveTab('laporan');
       } else {
         setLoginError('Username atau password TPS tidak ditemukan!');
       }
@@ -155,8 +155,8 @@ export default function App() {
       <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 flex items-center justify-center p-4">
         <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-white/20">
           <div className="bg-gradient-to-r from-emerald-700 to-teal-800 p-6 text-white text-center relative">
-            <div className="mx-auto bg-white/15 w-20 h-20 rounded-full flex items-center justify-center mb-3 shadow-inner border border-white/30">
-              <Vote className="w-10 h-10 text-emerald-200" />
+            <div className="mx-auto bg-white/15 w-20 h-20 rounded-full flex items-center justify-center mb-3 shadow-inner border border-white/30 overflow-hidden">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain p-2" onError={(e)=>{e.target.onerror=null; e.target.src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=100&auto=format&fit=crop"}} />
             </div>
             <h1 className="text-2xl font-bold tracking-wide">PILKADES DESA</h1>
             <p className="text-emerald-200 text-sm mt-1">Kalkulator & Tabulasi Suara Timses</p>
@@ -257,8 +257,8 @@ export default function App() {
       <header className="bg-emerald-800 text-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
           <div className="flex items-center space-x-3">
-            <div className="bg-emerald-700 p-2 rounded-lg border border-emerald-600 shadow-inner">
-              <Vote className="w-6 h-6 text-emerald-200" />
+            <div className="bg-emerald-700 p-1.5 rounded-lg border border-emerald-600 shadow-inner flex items-center justify-center w-10 h-10 overflow-hidden">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" onError={(e)=>{e.target.onerror=null; e.target.src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=100&auto=format&fit=crop"}} />
             </div>
             <div>
               <h1 className="font-bold text-lg leading-tight flex items-center gap-2">
@@ -291,7 +291,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Navigation Tabs - Hanya Tampilkan Tab Sesuai Role */}
         <div className="bg-emerald-900/60 border-t border-emerald-700/50">
           <div className="max-w-7xl mx-auto px-4 flex space-x-2 overflow-x-auto py-1">
             {currentUser.role === 'admin' && (
@@ -327,8 +326,6 @@ export default function App() {
       </header>
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
-        
-        {/* Banner Hanya Ditampilkan untuk Admin */}
         {currentUser.role === 'admin' && (
           <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
@@ -360,7 +357,6 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 1: DASHBOARD (ADMIN ONLY) */}
         {currentUser.role === 'admin' && activeTab === 'dashboard' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -472,7 +468,6 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 2: MANAJEMEN TPS (ADMIN ONLY) */}
         {currentUser.role === 'admin' && activeTab === 'tps' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
@@ -556,7 +551,6 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 3: FORM LAPORAN (TPS USER ONLY - TAMPILAN BERSIH KHUSUS PETUGAS) */}
         {currentUser.role === 'tps' && (
           <div className="space-y-6">
             {(() => {
@@ -615,7 +609,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Modal Add / Edit TPS (Admin Only) */}
       {showTpsModal && currentUser.role === 'admin' && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
